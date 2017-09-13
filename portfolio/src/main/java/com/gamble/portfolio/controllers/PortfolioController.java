@@ -15,7 +15,7 @@ public class PortfolioController {
 		return "forward:/me.html";
 	}
 
-	@RequestMapping("/portfolio")
+	@RequestMapping("/porty")
 	public String portfolio() {
 		return "forward:/portfolio.html";
 	}
