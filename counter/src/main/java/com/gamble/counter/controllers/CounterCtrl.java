@@ -1,21 +1,19 @@
 package com.gamble.counter.controllers;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
 @SessionAttributes("clicks")
 public class CounterCtrl {
 	
 	@ModelAttribute("clicks")
-	public Integer getSessionAttribute() {
+	public Integer setSessionAttribute() {
 		return 0;
 	}
 	
@@ -29,18 +27,14 @@ public class CounterCtrl {
 	}
 		
 	@RequestMapping("/counter")
-//	public String counter(@ModelAttribute("clicks") Integer clicks) {
 	public String counter() {
 //		System.out.println(clicks);
 		return "counterdisplay.jsp";
 	}
 
     @RequestMapping("/clearSession")
-//  public String setSession(@ModelAttribute("clicks") Integer clicks, Model model){
-//    public String setSession(Model model, HttpSession session){
-    	  public String setSession(HttpSession session){
-//        model.addAttribute("clicks", 0);
-        session.invalidate();
+    	  public String setSession(SessionStatus session){
+        session.setComplete();
         return "redirect:/";
     }
 

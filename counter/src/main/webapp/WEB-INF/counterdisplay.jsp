@@ -10,8 +10,6 @@
 </head>
 <body>
 	<p>You have visited <c:out value="${clicks}"/> times</p>
-	<p><a href ="/">Test another visit?</a></p>
-		<p>experiment test: <c:out value="${dummytest}"/></p>
-	
+	<p><a href ="/">Test another visit?</a></p>	
 </body>
 </html>
