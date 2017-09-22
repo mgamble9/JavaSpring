@@ -29,7 +29,7 @@
         	<p>
         		<form:label path="expiration_date">Expiration Date
 		    <form:errors path="expiration_date"/>
-		    <form:input type="date" min="${min_date}" path="expiration_date"/></form:label>
+		    <form:input type="date" min="${min_date}" required="true" path="expiration_date"/></form:label>
         	
         	</p>
 	    <p><input type="submit" value="Create"/></p>

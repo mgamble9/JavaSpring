@@ -60,8 +60,14 @@ public class DriversLicenseCtrl {
         List<Person> people_list = personService.allPeople();
         model.addAttribute("people_list", people_list);
         System.out.println("before form submission: " + license.getNumber());
+		license.setNumber(String.format("%06d",License.id_counter));
+
+        while (licenseService.findLicenseByNumber(license.getNumber()) != null) {
+        		License.id_counter++;
+        		license.setNumber(String.format("%06d",License.id_counter));
+        }
     		return "/WEB-INF/views/license.jsp";
-    }
+    } 
     
     
     @PostMapping("/licenses/new")
@@ -83,8 +89,9 @@ public class DriversLicenseCtrl {
             }
             System.out.println("**" + license.getNumber());
             //this actually updates the old license from the db
-            // with new lic.number, exp date, and state;
-        			licenseService.addLicense(license);
+            // with new lic.number, exp date, and state 
+            // otherwise saves the new license.
+        		licenseService.addLicense(license);
         		return "redirect:/persons/" + person_id;
         }	
     }

@@ -31,4 +31,8 @@ public class LicenseService {
 	    return licenseRepository.findLicenseByPerson(person);
 	}
 
+	public License findLicenseByNumber(String number) {
+	    return licenseRepository.findLicenseByNumber(number);
+	}
+
 }

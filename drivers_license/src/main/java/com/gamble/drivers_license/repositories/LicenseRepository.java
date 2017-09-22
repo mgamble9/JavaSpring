@@ -13,6 +13,8 @@ public interface LicenseRepository extends CrudRepository<License, Long> {
 
 	License findLicenseByPerson(Person person);
 
+	License findLicenseByNumber(String number);
+
 
  
 

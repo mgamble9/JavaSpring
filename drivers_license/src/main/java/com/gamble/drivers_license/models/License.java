@@ -37,18 +37,12 @@ public class License {
     @OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JoinColumn(name="person_id")
     private Person person;
-    public static Integer id_counter = 0;
+    public static Integer id_counter = 1;
 
     public License() {
-		id_counter ++;
-		this.number = String.format("%06d",id_counter);
-		System.out.println("constructor: " + number);
     }
     
     public License(Person person) {
-    		id_counter ++;
-    		this.number = String.format("%06d",id_counter);
-    		System.out.println("constructor with inputs: " + number);
         this.person = person;
         this.createdAt = new Date();
         this.updatedAt = new Date();
