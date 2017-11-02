@@ -1,0 +1,15 @@
+table, th, tr, td {
+   border: 1px solid black;
+}
+
+.error {
+	color: red;
+}
+
+.message_wall {
+	width: 300px;
+	height: 200px;
+	overflow: scroll;
+	border-style: solid;
+	border-width: 1px;
+}
