@@ -33,8 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/css/**",
                 				"/registration",
                 				"/",
-                				"/home",
-                				"/courses"
+                				"/home"
                 				).permitAll()
                 .anyRequest().authenticated()
                 .and()

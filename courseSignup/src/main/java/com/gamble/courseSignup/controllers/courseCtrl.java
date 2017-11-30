@@ -29,14 +29,19 @@ import com.gamble.courseSignup.services.UserService;
 import com.gamble.courseSignup.validator.UserValidator;
 
 @Controller
-@SessionAttributes({"semester_session_var"})
+@SessionAttributes({"semester_session_var","page_switch_session_var"})
 public class courseCtrl {
 
 	@ModelAttribute("semester_session_var")
 	public Integer setSessionSemesterSessionVarAttribute() {
 		return 0;
 	}
-	
+
+	@ModelAttribute("page_switch_session_var")
+	public Integer setSessionPageSwitchSessionVarAttribute() {
+		return 0;
+	}
+
 	private static final int DECEMBER_CUTOFF_DAY = 15;
 	private static final int DECEMBER = 12;
 	private UserService userService;
@@ -83,7 +88,8 @@ public class courseCtrl {
     public String homePage(Principal principal,
     								Model model,
     								@ModelAttribute("semester") String semester,
-    								@ModelAttribute("semester_session_var") int ssv
+    								@ModelAttribute("semester_session_var") int ssv,
+    								@ModelAttribute("page_switch_session_var") int pssv
     								){
     		String username = principal.getName();
     		User current_user = userService.findByUsername(username);
@@ -137,62 +143,19 @@ public class courseCtrl {
 		return "redirect:/home";
     }
 
-    @RequestMapping("/courses")
-    public String coursePage(Principal principal,
-    								Model model,
-    								@ModelAttribute("semester") String semester,
-    								@ModelAttribute("semester_session_var") int ssv
-    								){
-    		String username = principal.getName();
-    		User current_user = userService.findByUsername(username);
-    		model.addAttribute("current_user", current_user);
-       	Date userdate = current_user.getCreated_at();
-       	SimpleDateFormat pattern1 = new SimpleDateFormat("yyyy");
-		int user_created_at_year = Integer.parseInt(pattern1.format(userdate));
-       	SimpleDateFormat pattern2 = new SimpleDateFormat("MM");
-		int user_created_at_month = Integer.parseInt(pattern2.format(userdate));
-       	SimpleDateFormat pattern3 = new SimpleDateFormat("dd");
-		int user_created_at_day = Integer.parseInt(pattern3.format(userdate));
-		String[] semester_season = {"Spring Semester " + user_created_at_year,
-				"Fall Semester "  + user_created_at_year,
-				"Spring Semester "  + (user_created_at_year+1),
-				"Fall Semester " + (user_created_at_year+1)};
-		if (user_created_at_month > 5) {
-			if (user_created_at_day > DECEMBER_CUTOFF_DAY && user_created_at_month == DECEMBER) {
-				semester_season[0] = "Spring Semester "  + (user_created_at_year+1);
-				semester_season[1] = "Fall Semester "  + (user_created_at_year+1);
-				semester_season[2] = "Spring Semester "  + (user_created_at_year+2);
-				semester_season[3] = "Fall Semester "  + (user_created_at_year+2);
-			}
-			else {
-				semester_season[0] = "Fall Semester "  + user_created_at_year;
-				semester_season[1] = "Spring Semester "  + (user_created_at_year+1);
-				semester_season[2] = "Fall Semester "  + (user_created_at_year+1);
-				semester_season[3] = "Spring Semester "  + (user_created_at_year+2);
-			}
-		}
-		model.addAttribute("semester_list", semester_season);
-		//System.out.println("semester: " + ssv);
-		List<Course> course_list = userService.findCoursesBySemester(semester_season[ssv]);
-		model.addAttribute("course_list", course_list);
-    		return "/WEB-INF/coursePage.jsp";
-    }
+    	@RequestMapping("/courses")
+    	public String switchPageSessionVar(@ModelAttribute("page_switch_session_var") int pssv,
+    													Model model) {
+    		if (pssv == 0) {
+    			pssv = 1;
+    		}
+    		else {
+    			pssv = 0;
+    		}
+    		model.addAttribute("page_switch_session_var", pssv);
+    		return "redirect:/home";
+    	}
 
-    @PostMapping("/courses")
-    public String semesterPickFromCourse(@Valid @ModelAttribute("semester") String semester,
-    		BindingResult result,
-		@ModelAttribute("semester_session_var") int ssv,   								
-    		Model model ) {
-
-	    if (result.hasErrors()) {
-	        return "/WEB-INF/coursePage.jsp";
-	    }
-		//System.out.println("semester: " + semester);
-		ssv = Integer.parseInt(semester);
-		//System.out.println("semester session var: " + ssv);
-		model.addAttribute("semester_session_var", ssv);
-		return "redirect:/courses";
-    }
 
     @RequestMapping("/add/{id}")
 	public String addCourse (Principal principal,
@@ -203,23 +166,11 @@ public class courseCtrl {
 		Course course_to_add = userService.findCourse(id);
 		current_user.getCourses().add(course_to_add);
 		userService.updateUser(current_user);
-		return "redirect:/courses";
+		return "redirect:/home";
     }
     
     @RequestMapping("/drop/{id}")
 	public String dropCourse (Principal principal,
-								Model model,
-								@PathVariable("id") Long id) {
-		String username = principal.getName();
-		User current_user = userService.findByUsername(username);
-		Course course_to_drop = userService.findCourse(id);
-		current_user.getCourses().remove(course_to_drop);
-		userService.updateUser(current_user);
-		return "redirect:/courses";
-    }
-
-    @RequestMapping("/drop2/{id}")
-	public String drop2Course (Principal principal,
 								Model model,
 								@PathVariable("id") Long id) {
 		String username = principal.getName();
